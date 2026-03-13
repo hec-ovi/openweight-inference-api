@@ -50,10 +50,10 @@ class Settings(BaseSettings):
     vllm_stream_timeout_seconds: float = Field(default=900.0, alias="VLLM_STREAM_TIMEOUT_SECONDS", gt=0)
     vllm_health_path: str = Field(default="/health", alias="VLLM_HEALTH_PATH")
 
-    model_cache_dir: str = Field(default="/home/hector/models/vllm", alias="MODEL_CACHE_DIR")
-    hf_home: str = Field(default="/home/hector/models/vllm/hf", alias="HF_HOME")
-    huggingface_hub_cache: str = Field(default="/home/hector/models/vllm/hub", alias="HUGGINGFACE_HUB_CACHE")
-    vllm_assets_cache: str = Field(default="/home/hector/models/vllm/assets", alias="VLLM_ASSETS_CACHE")
+    model_cache_dir: str = Field(default="/var/lib/openweight/models/vllm", alias="MODEL_CACHE_DIR")
+    hf_home: str = Field(default="/var/lib/openweight/models/vllm/hf", alias="HF_HOME")
+    huggingface_hub_cache: str = Field(default="/var/lib/openweight/models/vllm/hub", alias="HUGGINGFACE_HUB_CACHE")
+    vllm_assets_cache: str = Field(default="/var/lib/openweight/models/vllm/assets", alias="VLLM_ASSETS_CACHE")
 
     @field_validator("api_bearer_keys", "cors_allow_origins", mode="before")
     @classmethod

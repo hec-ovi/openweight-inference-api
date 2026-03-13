@@ -253,8 +253,8 @@ OPENAI_API_KEY=
 ANTHROPIC_API_KEY=
 
 # === HOST PATHS (machine-specific, absolute paths) ===
-OLLAMA_MODELS_DIR=/home/hector/models/ollama
-VLLM_MODELS_DIR=/home/hector/models/ollama/vllm
+OLLAMA_MODELS_DIR=/var/lib/openweight/models/ollama
+VLLM_MODELS_DIR=/var/lib/openweight/models/vllm
 
 # === SERVICE CONFIGURATION ===
 OLLAMA_MODEL=gpt-oss:20b

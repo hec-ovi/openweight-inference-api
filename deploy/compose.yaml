@@ -16,10 +16,10 @@ services:
       VLLM_STREAM_TIMEOUT_SECONDS: ${VLLM_STREAM_TIMEOUT_SECONDS:-900}
       REQUEST_MAX_BODY_BYTES: ${REQUEST_MAX_BODY_BYTES:-1048576}
       CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS:-http://localhost:8000,http://localhost:8080}
-      MODEL_CACHE_DIR: ${MODEL_CACHE_DIR:-/home/hector/models/vllm}
-      HF_HOME: ${HF_HOME:-/home/hector/models/vllm/hf}
-      HUGGINGFACE_HUB_CACHE: ${HUGGINGFACE_HUB_CACHE:-/home/hector/models/vllm/hub}
-      VLLM_ASSETS_CACHE: ${VLLM_ASSETS_CACHE:-/home/hector/models/vllm/assets}
+      MODEL_CACHE_DIR: ${MODEL_CACHE_DIR:-/var/lib/openweight/models/vllm}
+      HF_HOME: ${HF_HOME:-/var/lib/openweight/models/vllm/hf}
+      HUGGINGFACE_HUB_CACHE: ${HUGGINGFACE_HUB_CACHE:-/var/lib/openweight/models/vllm/hub}
+      VLLM_ASSETS_CACHE: ${VLLM_ASSETS_CACHE:-/var/lib/openweight/models/vllm/assets}
     depends_on:
       vllm:
         condition: service_healthy
@@ -55,7 +55,7 @@ services:
     ports:
       - "8001:8000"
     volumes:
-      - ${MODEL_CACHE_DIR:-/home/hector/models/vllm}:/models/vllm
+      - ${MODEL_CACHE_DIR:-/var/lib/openweight/models/vllm}:/models/vllm
     healthcheck:
       test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health')\""]
       interval: 20s
@@ -70,4 +70,3 @@ services:
 networks:
   openweight:
     driver: bridge
-

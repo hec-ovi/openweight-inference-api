@@ -14,7 +14,7 @@ def test_compose_files_mount_persistent_model_cache() -> None:
 
     compose = yaml.safe_load((ROOT / "deploy/compose.yaml").read_text(encoding="utf-8"))
     vllm_service = compose["services"]["vllm"]
-    assert "${MODEL_CACHE_DIR:-/home/hector/models/vllm}:/models/vllm" in vllm_service["volumes"]
+    assert "${MODEL_CACHE_DIR:-/var/lib/openweight/models/vllm}:/models/vllm" in vllm_service["volumes"]
 
 
 def test_kubernetes_assets_define_amd_gpu_resources() -> None:

@@ -8,7 +8,7 @@ Production-ready ROCm-first inference gateway for open-weight chat and reasoning
 - Strict bearer auth, request IDs, JSON logs, request-size limits, CORS, and Prometheus metrics
 - Model adapter isolation for `openai/gpt-oss-20b`, `Qwen/Qwen3.5-4B`, and `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B`
 - ROCm 7.2 stable deployment lane plus a separate ROCm/TheRock 7.11.0 preview lane for gfx1151 validation
-- Persistent host-backed model storage rooted at `/home/hector/models/vllm`
+- Persistent host-backed model storage rooted at `/var/lib/openweight/models/vllm`
 - Static API docs in [`docs/`](./docs)
 
 ## Runtime lanes
@@ -18,10 +18,10 @@ Production-ready ROCm-first inference gateway for open-weight chat and reasoning
 
 Both lanes mount the same persistent cache layout:
 
-- `MODEL_CACHE_DIR=/home/hector/models/vllm`
-- `HF_HOME=/home/hector/models/vllm/hf`
-- `HUGGINGFACE_HUB_CACHE=/home/hector/models/vllm/hub`
-- `VLLM_ASSETS_CACHE=/home/hector/models/vllm/assets`
+- `MODEL_CACHE_DIR=/var/lib/openweight/models/vllm`
+- `HF_HOME=/var/lib/openweight/models/vllm/hf`
+- `HUGGINGFACE_HUB_CACHE=/var/lib/openweight/models/vllm/hub`
+- `VLLM_ASSETS_CACHE=/var/lib/openweight/models/vllm/assets`
 
 ## Required env
 
@@ -33,7 +33,7 @@ API_BEARER_KEYS=replace-with-a-real-long-random-token
 MODEL_PROFILE=qwen3.5-light
 ```
 
-The full template is in [`.env.template`](/home/hector/workspace/openweight-inference-api/.env.template).
+The full template is in [`.env.template`](./.env.template).
 
 ## Local run
 
@@ -49,7 +49,7 @@ TheRock compatibility lane:
 docker compose -f deploy/compose.yaml -f deploy/compose.therock.yaml up -d --build
 ```
 
-Docs are published from [`docs/index.html`](/home/hector/workspace/openweight-inference-api/docs/index.html) and [`docs/redoc.html`](/home/hector/workspace/openweight-inference-api/docs/redoc.html). Refresh `docs/openapi.json` with:
+Docs are published from [`docs/index.html`](./docs/index.html) and [`docs/redoc.html`](./docs/redoc.html). Refresh `docs/openapi.json` with:
 
 ```bash
 cd backend

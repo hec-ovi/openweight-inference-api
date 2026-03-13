@@ -225,7 +225,7 @@ Do not rely on ephemeral container-only downloads.
 Requirements:
 
 - all model weights and caches must live on persistent host or PVC-backed storage
-- local default host path should be `/home/hector/models/ollama/vllm`
+- local default host path should be `/var/lib/openweight/models/vllm`
 - container runtime must mount a persistent model directory
 - Hugging Face cache directories must also be persistent
 - restarts must reuse cached weights instead of redownloading
