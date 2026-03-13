@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-MODEL_PROFILE="${MODEL_PROFILE:-qwen3-light}"
+MODEL_PROFILE="${MODEL_PROFILE:-gpt-oss}"
 VLLM_HOST="${VLLM_HOST:-0.0.0.0}"
 VLLM_PORT="${VLLM_PORT:-8000}"
 

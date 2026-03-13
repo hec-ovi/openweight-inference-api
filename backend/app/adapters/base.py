@@ -7,7 +7,7 @@ from typing import Literal
 
 from pydantic import Field
 
-from app.core.errors import ModelSelectionError, ReasoningNotSupportedError
+from app.core.errors import EndpointNotSupportedError, ModelSelectionError, ReasoningNotSupportedError
 from app.models.chat import ChatCompletionsRequest
 from app.models.common import ReasoningConfig, StrictModel
 from app.models.models_api import ModelCapabilities, ModelCard
@@ -21,13 +21,9 @@ class ModelProfile(StrictModel):
     key: Literal["qwen3-light", "deepseek-r1-distill", "gpt-oss"] = Field(description="Internal profile key.")
     public_model_id: str = Field(description="Public model identifier exposed by the gateway and vLLM.")
     hf_model_id: str = Field(description="Hugging Face model ID used for downloads.")
-    family: str = Field(description="Internal model family name.")
     reasoning_parser: str | None = Field(default=None, description="vLLM reasoning parser name.")
-    description: str = Field(description="Profile description.")
     owned_by: str = Field(description="Owning organization.")
     default_reasoning_enabled: bool = Field(description="Whether reasoning is enabled by default.")
-    vllm_launch_args: tuple[str, ...] = Field(description="Profile-specific vLLM serve flags.")
-    max_context_tokens: int = Field(description="Safe default context length.")
     max_output_tokens: int = Field(description="Safe default output length.")
 
 
@@ -35,6 +31,7 @@ class BaseModelAdapter(ABC):
     """Base adapter for translating stable API requests into profile-specific vLLM calls."""
 
     profile: ModelProfile
+    _HIDDEN_REASONING_TOKEN_HEADROOM = 64
 
     def assert_model(self, requested_model: str | None) -> str:
         """Ensure the request targets the active model."""
@@ -74,7 +71,7 @@ class BaseModelAdapter(ABC):
             owned_by=self.profile.owned_by,
             root=self.profile.public_model_id,
             capabilities=ModelCapabilities(
-                responses=True,
+                responses=self.supports_responses,
                 chat_completions=True,
                 streaming=True,
                 reasoning=self.supports_reasoning,
@@ -88,6 +85,12 @@ class BaseModelAdapter(ABC):
     @abstractmethod
     def supports_reasoning(self) -> bool:
         """Return whether the profile exposes normalized reasoning controls."""
+
+    @property
+    def supports_responses(self) -> bool:
+        """Return whether the profile exposes `/v1/responses` as a stable contract."""
+
+        return True
 
     @abstractmethod
     def build_extra_body(self, reasoning: ReasoningConfig | None) -> VllmExtraBody | None:
@@ -107,13 +110,16 @@ class BaseModelAdapter(ABC):
             stream=request.stream,
             temperature=request.temperature,
             top_p=request.top_p,
-            max_tokens=request.max_tokens,
+            max_tokens=self._resolve_upstream_output_limit(request.max_tokens, reasoning),
             reasoning=reasoning,
             extra_body=self.build_extra_body(reasoning),
         )
 
     def build_responses_request(self, request: ResponsesRequest) -> UpstreamResponsesRequest:
         """Translate a public responses request into a vLLM-compatible payload."""
+
+        if not self.supports_responses:
+            raise EndpointNotSupportedError(self.profile.key, "/v1/responses")
 
         model = self.assert_model(request.model)
         reasoning = self.resolve_reasoning(request.reasoning)
@@ -126,7 +132,24 @@ class BaseModelAdapter(ABC):
             stream=request.stream,
             temperature=request.temperature,
             top_p=request.top_p,
-            max_output_tokens=request.max_output_tokens,
+            max_output_tokens=self._resolve_upstream_output_limit(request.max_output_tokens, reasoning),
             reasoning=reasoning,
             extra_body=self.build_extra_body(reasoning),
+        )
+
+    def _resolve_upstream_output_limit(self, requested_limit: int | None, reasoning: ReasoningConfig | None) -> int | None:
+        """Add headroom when hidden reasoning still consumes upstream output tokens."""
+
+        if requested_limit is None:
+            return None
+
+        if not self.profile.default_reasoning_enabled:
+            return requested_limit
+
+        if reasoning is None or reasoning.enabled is not False or reasoning.include is not False:
+            return requested_limit
+
+        return min(
+            self.profile.max_output_tokens,
+            requested_limit + max(self._HIDDEN_REASONING_TOKEN_HEADROOM, requested_limit),
         )

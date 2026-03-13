@@ -8,7 +8,7 @@ services:
       API_BEARER_KEYS: ${API_BEARER_KEYS}
       APP_ENV: ${APP_ENV:-production}
       APP_LOG_LEVEL: ${APP_LOG_LEVEL:-INFO}
-      MODEL_PROFILE: ${MODEL_PROFILE:-qwen3-light}
+      MODEL_PROFILE: ${MODEL_PROFILE:-gpt-oss}
       VLLM_BASE_URL: http://vllm:8000
       VLLM_REQUEST_TIMEOUT_SECONDS: ${VLLM_REQUEST_TIMEOUT_SECONDS:-120}
       VLLM_STREAM_TIMEOUT_SECONDS: ${VLLM_STREAM_TIMEOUT_SECONDS:-900}
@@ -30,7 +30,7 @@ services:
     image: openweight-vllm:rocm7.2-stable
     environment:
       HF_TOKEN: ${HF_TOKEN}
-      MODEL_PROFILE: ${MODEL_PROFILE:-qwen3-light}
+      MODEL_PROFILE: ${MODEL_PROFILE:-gpt-oss}
       MODEL_CACHE_DIR: /models/vllm
       VLLM_GPU_MEMORY_UTILIZATION: ${VLLM_GPU_MEMORY_UTILIZATION:-0.9}
       VLLM_MAX_MODEL_LEN: ${VLLM_MAX_MODEL_LEN:-32768}

@@ -14,6 +14,7 @@ from app.core.types import JsonObject
 from app.models.chat import ChatCompletionsRequest, ChatCompletionsResponse
 from app.models.models_api import ModelListResponse
 from app.models.responses import ResponsesRequest, ResponsesResponse
+from app.services.responses_normalizer import normalize_responses_payload, normalize_responses_sse
 from app.services.vllm_client import VllmClient
 
 
@@ -50,6 +51,7 @@ async def create_response(
         data = await client.post_json("/v1/responses", payload)
     except httpx.HTTPStatusError as exc:
         raise UpstreamServiceError(_extract_upstream_message(exc)) from exc
+    data = normalize_responses_payload(data, payload.reasoning)
     return ResponsesResponse.model_validate(data)
 
 
@@ -86,7 +88,7 @@ async def stream_response(
         async with client.stream("/v1/responses", payload, "responses", settings.model_profile) as response:
             if response.status_code >= 400:
                 raise UpstreamServiceError(await _extract_stream_error_message(response))
-            async for chunk in response.aiter_bytes():
+            async for chunk in normalize_responses_sse(response.aiter_bytes(), payload.reasoning):
                 if chunk:
                     yield chunk
     except httpx.HTTPError as exc:
@@ -125,4 +127,3 @@ async def _extract_stream_error_message(response: httpx.Response) -> str:
         if isinstance(message, str):
             return message
     return f"Upstream vLLM streaming request failed with status {response.status_code}."
-

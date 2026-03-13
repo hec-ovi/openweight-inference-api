@@ -46,15 +46,17 @@ def test_responses_stream_passthrough(settings, monkeypatch) -> None:
 
     monkeypatch.setattr(VllmClient, "stream", fake_stream)
 
+    gpt_settings = settings.model_copy(update={"model_profile": "gpt-oss"})
+
     response = asyncio.run(
         responses(
             ResponsesRequest(
-                model="Qwen/Qwen3-4B",
+                model="openai/gpt-oss-20b",
                 input="stream",
                 stream=True,
             ),
             "test-token",
-            settings,
+            gpt_settings,
         )
     )
 

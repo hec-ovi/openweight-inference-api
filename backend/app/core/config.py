@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     request_max_body_bytes: int = Field(default=1_048_576, alias="REQUEST_MAX_BODY_BYTES", ge=1024)
 
     model_profile: Literal["qwen3-light", "deepseek-r1-distill", "gpt-oss"] = Field(
-        default="qwen3-light",
+        default="gpt-oss",
         alias="MODEL_PROFILE",
     )
 

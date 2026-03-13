@@ -40,3 +40,13 @@ def test_static_docs_exist() -> None:
         ROOT / "docs/streaming.html",
     ]:
         assert path.exists()
+
+
+def test_vllm_images_share_one_start_script() -> None:
+    """Both vLLM images should reuse the same startup entrypoint."""
+
+    stable_dockerfile = (ROOT / "deploy/vllm/stable/Dockerfile").read_text(encoding="utf-8")
+    therock_dockerfile = (ROOT / "deploy/vllm/therock/Dockerfile").read_text(encoding="utf-8")
+
+    assert "COPY deploy/vllm/start-vllm.sh /usr/local/bin/start-vllm.sh" in stable_dockerfile
+    assert "COPY deploy/vllm/start-vllm.sh /usr/local/bin/start-vllm.sh" in therock_dockerfile

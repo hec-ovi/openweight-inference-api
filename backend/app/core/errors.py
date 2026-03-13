@@ -58,6 +58,19 @@ class ReasoningNotSupportedError(GatewayError):
         )
 
 
+class EndpointNotSupportedError(GatewayError):
+    """The active model profile does not support an endpoint on this runtime."""
+
+    def __init__(self, model_profile: str, endpoint: str) -> None:
+        super().__init__(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            code="unsupported_endpoint",
+            message=f"Model profile '{model_profile}' does not support endpoint '{endpoint}' on this runtime.",
+            error_type="invalid_request_error",
+            param="endpoint",
+        )
+
+
 class UpstreamServiceError(GatewayError):
     """vLLM returned an error or became unavailable."""
 
@@ -82,4 +95,3 @@ def error_envelope(error: GatewayError) -> ErrorEnvelope:
             request_id=request_id_context.get(),
         )
     )
-

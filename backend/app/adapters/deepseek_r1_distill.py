@@ -14,18 +14,9 @@ class DeepSeekR1DistillAdapter(BaseModelAdapter):
         key="deepseek-r1-distill",
         public_model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
         hf_model_id="deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
-        family="deepseek-r1-distill",
         reasoning_parser="deepseek_r1",
-        description="Reasoning-capable DeepSeek distill profile.",
         owned_by="deepseek-ai",
         default_reasoning_enabled=True,
-        vllm_launch_args=(
-            "--reasoning-parser",
-            "deepseek_r1",
-            "--max-model-len",
-            "32768",
-        ),
-        max_context_tokens=32768,
         max_output_tokens=8192,
     )
 
@@ -41,4 +32,3 @@ class DeepSeekR1DistillAdapter(BaseModelAdapter):
         if reasoning is None:
             return VllmExtraBody(include_reasoning=True)
         return VllmExtraBody(include_reasoning=reasoning.include)
-

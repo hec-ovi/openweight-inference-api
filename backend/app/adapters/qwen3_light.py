@@ -14,26 +14,23 @@ class Qwen3LightAdapter(BaseModelAdapter):
         key="qwen3-light",
         public_model_id="Qwen/Qwen3-4B",
         hf_model_id="Qwen/Qwen3-4B",
-        family="qwen3",
         reasoning_parser="qwen3",
-        description="Lightweight Qwen 3 profile with thinking disabled by default.",
         owned_by="Qwen",
         default_reasoning_enabled=False,
-        vllm_launch_args=(
-            "--reasoning-parser",
-            "qwen3",
-            "--max-model-len",
-            "32768",
-        ),
-        max_context_tokens=32768,
         max_output_tokens=4096,
     )
 
     @property
     def supports_reasoning(self) -> bool:
-        """Qwen supports explicit thinking mode."""
+        """Qwen reasoning is not exposed as a stable normalized contract on this runtime."""
 
-        return True
+        return False
+
+    @property
+    def supports_responses(self) -> bool:
+        """Qwen Responses output is not reliable enough on the current stable runtime."""
+
+        return False
 
     def build_extra_body(self, reasoning: ReasoningConfig | None) -> VllmExtraBody | None:
         """Toggle Qwen thinking mode explicitly so normal mode remains the default."""

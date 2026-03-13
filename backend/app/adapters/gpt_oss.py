@@ -14,18 +14,9 @@ class GptOssAdapter(BaseModelAdapter):
         key="gpt-oss",
         public_model_id="openai/gpt-oss-20b",
         hf_model_id="openai/gpt-oss-20b",
-        family="gpt-oss-harmony",
         reasoning_parser="openai_gptoss",
-        description="Harmony-based OpenAI GPT-OSS reasoning profile.",
         owned_by="openai",
         default_reasoning_enabled=True,
-        vllm_launch_args=(
-            "--reasoning-parser",
-            "openai_gptoss",
-            "--max-model-len",
-            "32768",
-        ),
-        max_context_tokens=32768,
         max_output_tokens=8192,
     )
 

@@ -4,7 +4,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends ca-certificates tini \
     && rm -rf /var/lib/apt/lists/*
 
-COPY deploy/vllm/stable/start-vllm.sh /usr/local/bin/start-vllm.sh
+COPY deploy/vllm/start-vllm.sh /usr/local/bin/start-vllm.sh
 
 RUN chmod +x /usr/local/bin/start-vllm.sh
 

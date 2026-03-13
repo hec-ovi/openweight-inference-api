@@ -15,7 +15,7 @@ RUN python -m pip install --no-cache-dir --index-url ${THEROCK_TORCH_INDEX} "tor
 RUN python -m pip install --no-cache-dir --index-url ${THEROCK_TORCHVISION_INDEX} "torchvision==0.22.1+rocm7.11.0"
 RUN python -m pip install --no-cache-dir --extra-index-url ${VLLM_WHEEL_INDEX} "vllm==0.14.1"
 
-COPY deploy/vllm/therock/start-vllm.sh /usr/local/bin/start-vllm.sh
+COPY deploy/vllm/start-vllm.sh /usr/local/bin/start-vllm.sh
 
 RUN chmod +x /usr/local/bin/start-vllm.sh
 
