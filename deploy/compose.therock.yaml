@@ -1,0 +1,14 @@
+services:
+  vllm:
+    build:
+      context: ..
+      dockerfile: deploy/vllm/therock/Dockerfile
+      args:
+        THEROCK_WHEEL_INDEX: https://repo.amd.com/rocm/whl/gfx1151/
+        THEROCK_TORCH_INDEX: https://repo.amd.com/rocm/whl/gfx1151/torch/
+        THEROCK_TORCHVISION_INDEX: https://repo.amd.com/rocm/whl/gfx1151/torchvision/
+        VLLM_WHEEL_INDEX: https://wheels.vllm.ai/rocm/0.14.1/rocm700
+    image: openweight-vllm:therock-7.11.0-preview
+    environment:
+      RUNTIME_LANE: therock-preview
+

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openweight-gateway-config
+data:
+  APP_ENV: production
+  APP_LOG_LEVEL: INFO
+  MODEL_PROFILE: qwen3.5-light
+  VLLM_BASE_URL: http://openweight-vllm:8000
+  VLLM_REQUEST_TIMEOUT_SECONDS: "120"
+  VLLM_STREAM_TIMEOUT_SECONDS: "900"
+  REQUEST_MAX_BODY_BYTES: "1048576"
+  CORS_ALLOW_ORIGINS: https://docs.example.com
+  MODEL_CACHE_DIR: /models/vllm
+  HF_HOME: /models/vllm/hf
+  HUGGINGFACE_HUB_CACHE: /models/vllm/hub
+  VLLM_ASSETS_CACHE: /models/vllm/assets
+

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OpenWeight Responses API | Examples</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 2rem 1.25rem 4rem;
+        font-family: "IBM Plex Sans", "Segoe UI", sans-serif;
+        color: #151a16;
+        background:
+          linear-gradient(180deg, rgba(208, 234, 224, 0.45), transparent 25%),
+          linear-gradient(135deg, #f6efe2, #f0f7f3);
+      }
+
+      main {
+        margin: 0 auto;
+        width: min(960px, 100%);
+      }
+
+      pre {
+        overflow-x: auto;
+        padding: 1rem;
+        border-radius: 18px;
+        background: rgba(17, 22, 19, 0.92);
+        color: #f6f4ef;
+      }
+
+      a {
+        color: #a5482c;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Examples</h1>
+      <p><a href="./index.html">Back to Swagger UI</a></p>
+      <h2>Responses API</h2>
+      <pre><code>curl -X POST http://localhost:8000/v1/responses \
+  -H "Authorization: Bearer $API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "Qwen/Qwen3.5-4B",
+    "input": [
+      {
+        "role": "user",
+        "content": "Summarize ROCm deployment risks for Strix Halo."
+      }
+    ],
+    "reasoning": {
+      "enabled": false
+    }
+  }'</code></pre>
+
+      <h2>Chat Completions</h2>
+      <pre><code>curl -X POST http://localhost:8000/v1/chat/completions \
+  -H "Authorization: Bearer $API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
+    "messages": [
+      {"role": "system", "content": "You are a concise infrastructure assistant."},
+      {"role": "user", "content": "Explain how to separate stable ROCm and TheRock lanes."}
+    ],
+    "reasoning": {
+      "enabled": true,
+      "effort": "high",
+      "include": true
+    }
+  }'</code></pre>
+
+      <h2>JavaScript</h2>
+      <pre><code>const response = await fetch("http://localhost:8000/v1/models", {
+  headers: {
+    Authorization: `Bearer ${apiToken}`,
+  },
+});
+
+const payload = await response.json();
+console.log(payload);</code></pre>
+    </main>
+  </body>
+</html>
+

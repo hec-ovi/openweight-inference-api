@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: openweight-vllm-stable
+spec:
+  serviceName: openweight-vllm
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openweight-vllm
+      runtime-lane: rocm-stable
+  template:
+    metadata:
+      labels:
+        app: openweight-vllm
+        runtime-lane: rocm-stable
+    spec:
+      nodeSelector:
+        accelerator: amd-rocm
+      tolerations:
+        - key: amd-gpu
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: vllm
+          image: openweight-vllm:rocm7.2-stable
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: MODEL_PROFILE
+              valueFrom:
+                configMapKeyRef:
+                  name: openweight-gateway-config
+                  key: MODEL_PROFILE
+            - name: MODEL_CACHE_DIR
+              value: /models/vllm
+            - name: HF_HOME
+              value: /models/vllm/hf
+            - name: HUGGINGFACE_HUB_CACHE
+              value: /models/vllm/hub
+            - name: VLLM_ASSETS_CACHE
+              value: /models/vllm/assets
+            - name: HF_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: openweight-vllm-secrets
+                  key: HF_TOKEN
+          ports:
+            - containerPort: 8000
+              name: http
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 45
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 45
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "4"
+              memory: 24Gi
+              amd.com/gpu: "1"
+            limits:
+              cpu: "8"
+              memory: 48Gi
+              amd.com/gpu: "1"
+          volumeMounts:
+            - name: model-cache
+              mountPath: /models/vllm
+      volumes:
+        - name: model-cache
+          persistentVolumeClaim:
+            claimName: openweight-model-cache
+

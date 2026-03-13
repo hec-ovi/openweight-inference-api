@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openweight-gateway
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: openweight-gateway
+  template:
+    metadata:
+      labels:
+        app: openweight-gateway
+    spec:
+      containers:
+        - name: gateway
+          image: openweight-gateway:0.1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: openweight-gateway-config
+            - secretRef:
+                name: openweight-gateway-secrets
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+
