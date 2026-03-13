@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 
 from app.models.chat import ChatCompletionsRequest, ChatMessage
+from app.models.upstream import ChatTemplateKwargs, UpstreamChatCompletionsRequest, VllmExtraBody
 from app.routes.chat import chat_completions
 from app.routes.models import models
 from app.services.vllm_client import VllmClient
@@ -22,7 +23,7 @@ def test_chat_proxy_sends_qwen_thinking_flag(settings, monkeypatch) -> None:
             "id": "chatcmpl_123",
             "object": "chat.completion",
             "created": 1,
-            "model": "Qwen/Qwen3.5-4B",
+            "model": "Qwen/Qwen3-4B",
             "choices": [
                 {
                     "index": 0,
@@ -38,7 +39,7 @@ def test_chat_proxy_sends_qwen_thinking_flag(settings, monkeypatch) -> None:
     response = asyncio.run(
         chat_completions(
             ChatCompletionsRequest(
-                model="Qwen/Qwen3.5-4B",
+                model="Qwen/Qwen3-4B",
                 messages=[ChatMessage(role="user", content="Say hello")],
             ),
             "test-token",
@@ -56,4 +57,19 @@ def test_models_endpoint_returns_active_profile(settings) -> None:
     """The gateway should expose only the active deployment model."""
 
     payload = asyncio.run(models("test-token", settings))
-    assert payload.data[0].id == "Qwen/Qwen3.5-4B"
+    assert payload.data[0].id == "Qwen/Qwen3-4B"
+
+
+def test_vllm_client_flattens_extra_body(settings) -> None:
+    """vLLM extension fields should be emitted at the top level for raw HTTP requests."""
+
+    payload = UpstreamChatCompletionsRequest(
+        model="Qwen/Qwen3-4B",
+        messages=[ChatMessage(role="user", content="Say hello")],
+        extra_body=VllmExtraBody(chat_template_kwargs=ChatTemplateKwargs(enable_thinking=False)),
+    )
+
+    body = VllmClient(settings)._build_request_body(payload)
+
+    assert "extra_body" not in body
+    assert body["chat_template_kwargs"]["enable_thinking"] is False

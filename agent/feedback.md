@@ -96,7 +96,7 @@ Each supported model family must have its own isolated adapter/profile that defi
 Minimum required starter profiles:
 
 - `openai/gpt-oss-20b`
-- `Qwen/Qwen3.5-4B`
+- `Qwen/Qwen3-4B`
 - `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B`
 
 These are not just three model IDs.
@@ -105,7 +105,7 @@ They must be three separate adapter implementations.
 Starter profile roles:
 
 - `openai/gpt-oss-20b` = reasoning-capable OpenAI open-weight profile with a dedicated Harmony-based adapter
-- `Qwen/Qwen3.5-4B` = lightweight common profile that defaults to normal non-CoT behavior
+- `Qwen/Qwen3-4B` = lightweight common profile that defaults to normal non-CoT behavior
 - `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B` = separate reasoning-capable profile with its own DeepSeek-specific adapter path
 
 Why this starter set:
@@ -167,7 +167,7 @@ Requirements:
 Mandatory starter adapters:
 
 - `gpt-oss` adapter
-- `qwen3.5-light` adapter
+- `qwen3-light` adapter
 - `deepseek-r1-distill` adapter
 
 Adapter-specific requirements:
@@ -176,8 +176,8 @@ Adapter-specific requirements:
   - use Harmony-compatible input formatting and output parsing
   - keep Harmony isolated inside the `gpt-oss` path
   - treat `gpt-oss` as its own protocol family
-- `qwen3.5-light` adapter:
-  - target `Qwen/Qwen3.5-4B`
+- `qwen3-light` adapter:
+  - target `Qwen/Qwen3-4B`
   - default to normal non-CoT behavior
   - keep thinking disabled by default for this lightweight profile unless explicitly requested and supported
   - own its Qwen-specific template and generation normalization
@@ -234,8 +234,8 @@ Recommended env/config shape:
 
 - `MODEL_CACHE_DIR`
 - `HF_HOME`
-- `HUGGINGFACE_HUB_CACHE`
-- `VLLM_ASSETS_CACHE`
+- `HF_HUB_CACHE`
+- `HF_ASSETS_CACHE`
 - `MODEL_ID`
 - `MODEL_PROFILE`
 
@@ -434,11 +434,11 @@ The project is done when all of the following are true:
 - a TheRock compatibility lane exists
 - one selected model profile serves real traffic reliably
 - multiple model families are supported through adapters in the codebase
-- the starter set includes `openai/gpt-oss-20b`, `Qwen/Qwen3.5-4B`, and `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B`
+- the starter set includes `openai/gpt-oss-20b`, `Qwen/Qwen3-4B`, and `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B`
 - each starter model has its own isolated adapter implementation
 - reasoning works for supported models
 - `gpt-oss` has its own dedicated protocol layer
-- `Qwen/Qwen3.5-4B` works as the lightweight default normal-output profile
+- `Qwen/Qwen3-4B` works as the lightweight default normal-output profile
 - `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B` works as a second reasoning profile
 - `Responses` works
 - `Chat Completions` compatibility works
@@ -455,7 +455,7 @@ The project is done when all of the following are true:
 Recommended order of work:
 
 1. establish the API contract and adapter abstractions
-2. implement `Qwen/Qwen3.5-4B` as the lightweight baseline profile
+2. implement `Qwen/Qwen3-4B` as the lightweight baseline profile
 3. implement `deepseek-ai/DeepSeek-R1-Distill-Qwen-7B` as the second reasoning adapter
 4. implement `openai/gpt-oss-20b` with its Harmony-specific adapter path
 5. implement auth, health, readiness, metrics, and structured errors

@@ -18,7 +18,7 @@ from app.models.upstream import UpstreamChatCompletionsRequest, UpstreamResponse
 class ModelProfile(StrictModel):
     """Static profile metadata for a supported model family."""
 
-    key: Literal["qwen3.5-light", "deepseek-r1-distill", "gpt-oss"] = Field(description="Internal profile key.")
+    key: Literal["qwen3-light", "deepseek-r1-distill", "gpt-oss"] = Field(description="Internal profile key.")
     public_model_id: str = Field(description="Public model identifier exposed by the gateway and vLLM.")
     hf_model_id: str = Field(description="Hugging Face model ID used for downloads.")
     family: str = Field(description="Internal model family name.")
@@ -130,4 +130,3 @@ class BaseModelAdapter(ABC):
             reasoning=reasoning,
             extra_body=self.build_extra_body(reasoning),
         )
-

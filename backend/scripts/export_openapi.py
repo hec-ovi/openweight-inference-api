@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 os.environ.setdefault("API_BEARER_KEYS", "docs-token")
-os.environ.setdefault("MODEL_PROFILE", "qwen3.5-light")
+os.environ.setdefault("MODEL_PROFILE", "qwen3-light")
 os.environ.setdefault("VLLM_BASE_URL", "http://vllm:8000")
 
 from app.core.config import get_settings  # noqa: E402
@@ -28,4 +28,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

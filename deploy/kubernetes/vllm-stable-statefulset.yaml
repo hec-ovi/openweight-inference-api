@@ -33,12 +33,6 @@ spec:
                   key: MODEL_PROFILE
             - name: MODEL_CACHE_DIR
               value: /models/vllm
-            - name: HF_HOME
-              value: /models/vllm/hf
-            - name: HUGGINGFACE_HUB_CACHE
-              value: /models/vllm/hub
-            - name: VLLM_ASSETS_CACHE
-              value: /models/vllm/assets
             - name: HF_TOKEN
               valueFrom:
                 secretKeyRef:
@@ -75,4 +69,3 @@ spec:
         - name: model-cache
           persistentVolumeClaim:
             claimName: openweight-model-cache
-

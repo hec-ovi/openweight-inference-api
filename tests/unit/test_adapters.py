@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from app.adapters.deepseek_r1_distill import DeepSeekR1DistillAdapter
 from app.adapters.gpt_oss import GptOssAdapter
-from app.adapters.qwen35_light import Qwen35LightAdapter
+from app.adapters.qwen3_light import Qwen3LightAdapter
 from app.models.chat import ChatCompletionsRequest, ChatMessage
 from app.models.common import ReasoningConfig
 
@@ -12,10 +12,10 @@ from app.models.common import ReasoningConfig
 def test_qwen_disables_thinking_by_default() -> None:
     """Qwen should default to non-thinking mode."""
 
-    adapter = Qwen35LightAdapter()
+    adapter = Qwen3LightAdapter()
     payload = adapter.build_chat_request(
         ChatCompletionsRequest(
-            model="Qwen/Qwen3.5-4B",
+            model="Qwen/Qwen3-4B",
             messages=[ChatMessage(role="user", content="Hello")],
         )
     )
@@ -51,4 +51,3 @@ def test_gpt_oss_can_disable_reasoning_output() -> None:
     )
     assert payload.extra_body is not None
     assert payload.extra_body.include_reasoning is False
-

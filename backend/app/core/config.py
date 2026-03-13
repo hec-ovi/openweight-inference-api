@@ -40,8 +40,8 @@ class Settings(BaseSettings):
     )
     request_max_body_bytes: int = Field(default=1_048_576, alias="REQUEST_MAX_BODY_BYTES", ge=1024)
 
-    model_profile: Literal["qwen3.5-light", "deepseek-r1-distill", "gpt-oss"] = Field(
-        default="qwen3.5-light",
+    model_profile: Literal["qwen3-light", "deepseek-r1-distill", "gpt-oss"] = Field(
+        default="qwen3-light",
         alias="MODEL_PROFILE",
     )
 
@@ -49,11 +49,6 @@ class Settings(BaseSettings):
     vllm_request_timeout_seconds: float = Field(default=120.0, alias="VLLM_REQUEST_TIMEOUT_SECONDS", gt=0)
     vllm_stream_timeout_seconds: float = Field(default=900.0, alias="VLLM_STREAM_TIMEOUT_SECONDS", gt=0)
     vllm_health_path: str = Field(default="/health", alias="VLLM_HEALTH_PATH")
-
-    model_cache_dir: str = Field(default="/var/lib/openweight/models/vllm", alias="MODEL_CACHE_DIR")
-    hf_home: str = Field(default="/var/lib/openweight/models/vllm/hf", alias="HF_HOME")
-    huggingface_hub_cache: str = Field(default="/var/lib/openweight/models/vllm/hub", alias="HUGGINGFACE_HUB_CACHE")
-    vllm_assets_cache: str = Field(default="/var/lib/openweight/models/vllm/assets", alias="VLLM_ASSETS_CACHE")
 
     @field_validator("api_bearer_keys", "cors_allow_origins", mode="before")
     @classmethod

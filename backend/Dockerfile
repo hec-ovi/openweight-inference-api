@@ -13,6 +13,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --locked --no-install-project --no-dev
 
 COPY app ./app
+COPY README.md ./README.md
 COPY scripts ./scripts
 
 RUN --mount=type=cache,target=/root/.cache/uv \
@@ -32,4 +33,3 @@ COPY --from=build /app /app
 EXPOSE 8000
 
 CMD ["uv", "run", "uvicorn", "app.main:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]
-

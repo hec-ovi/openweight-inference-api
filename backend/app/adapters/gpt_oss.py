@@ -15,13 +15,13 @@ class GptOssAdapter(BaseModelAdapter):
         public_model_id="openai/gpt-oss-20b",
         hf_model_id="openai/gpt-oss-20b",
         family="gpt-oss-harmony",
-        reasoning_parser="gptoss",
+        reasoning_parser="openai_gptoss",
         description="Harmony-based OpenAI GPT-OSS reasoning profile.",
         owned_by="openai",
         default_reasoning_enabled=True,
         vllm_launch_args=(
             "--reasoning-parser",
-            "gptoss",
+            "openai_gptoss",
             "--max-model-len",
             "32768",
         ),
@@ -41,4 +41,3 @@ class GptOssAdapter(BaseModelAdapter):
         if reasoning is None:
             return VllmExtraBody(include_reasoning=True)
         return VllmExtraBody(include_reasoning=reasoning.include if reasoning.enabled is not False else False)
-

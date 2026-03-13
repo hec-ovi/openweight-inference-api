@@ -49,7 +49,7 @@ def test_responses_stream_passthrough(settings, monkeypatch) -> None:
     response = asyncio.run(
         responses(
             ResponsesRequest(
-                model="Qwen/Qwen3.5-4B",
+                model="Qwen/Qwen3-4B",
                 input="stream",
                 stream=True,
             ),

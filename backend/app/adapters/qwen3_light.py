@@ -1,4 +1,4 @@
-"""Qwen 3.5 lightweight adapter."""
+"""Qwen 3 lightweight adapter."""
 
 from __future__ import annotations
 
@@ -7,16 +7,16 @@ from app.models.common import ReasoningConfig
 from app.models.upstream import ChatTemplateKwargs, VllmExtraBody
 
 
-class Qwen35LightAdapter(BaseModelAdapter):
-    """Adapter for `Qwen/Qwen3.5-4B`."""
+class Qwen3LightAdapter(BaseModelAdapter):
+    """Adapter for `Qwen/Qwen3-4B`."""
 
     profile = ModelProfile(
-        key="qwen3.5-light",
-        public_model_id="Qwen/Qwen3.5-4B",
-        hf_model_id="Qwen/Qwen3.5-4B",
-        family="qwen3.5",
+        key="qwen3-light",
+        public_model_id="Qwen/Qwen3-4B",
+        hf_model_id="Qwen/Qwen3-4B",
+        family="qwen3",
         reasoning_parser="qwen3",
-        description="Lightweight Qwen 3.5 profile with thinking disabled by default.",
+        description="Lightweight Qwen 3 profile with thinking disabled by default.",
         owned_by="Qwen",
         default_reasoning_enabled=False,
         vllm_launch_args=(
@@ -40,4 +40,3 @@ class Qwen35LightAdapter(BaseModelAdapter):
 
         enable_thinking = False if reasoning is None else bool(reasoning.enabled)
         return VllmExtraBody(chat_template_kwargs=ChatTemplateKwargs(enable_thinking=enable_thinking))
-

@@ -20,4 +20,3 @@ COPY deploy/vllm/therock/start-vllm.sh /usr/local/bin/start-vllm.sh
 RUN chmod +x /usr/local/bin/start-vllm.sh
 
 ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/start-vllm.sh"]
-

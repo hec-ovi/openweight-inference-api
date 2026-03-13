@@ -25,7 +25,7 @@ class VllmClient:
 
         timeout = httpx.Timeout(timeout=self._settings.vllm_request_timeout_seconds)
         async with httpx.AsyncClient(base_url=self._settings.vllm_base_url, timeout=timeout) as client:
-            response = await client.post(path, json=payload.model_dump(exclude_none=True))
+            response = await client.post(path, json=self._build_request_body(payload))
             if response.status_code >= 400:
                 UPSTREAM_FAILURES.labels(endpoint=path, reason=str(response.status_code)).inc()
                 raise httpx.HTTPStatusError("Upstream request failed.", request=response.request, response=response)
@@ -63,9 +63,18 @@ class VllmClient:
         timeout = httpx.Timeout(connect=10.0, read=self._settings.vllm_stream_timeout_seconds, write=30.0, pool=30.0)
         started_at = perf_counter()
         async with httpx.AsyncClient(base_url=self._settings.vllm_base_url, timeout=timeout) as client:
-            async with client.stream("POST", path, json=payload.model_dump(exclude_none=True)) as response:
+            async with client.stream("POST", path, json=self._build_request_body(payload)) as response:
                 try:
                     yield response
                 finally:
                     STREAM_DURATION.labels(endpoint=endpoint, model_profile=model_profile).observe(perf_counter() - started_at)
 
+    @staticmethod
+    def _build_request_body(payload: UpstreamChatCompletionsRequest | UpstreamResponsesRequest) -> JsonObject:
+        """Flatten vLLM extension fields into the top-level HTTP payload."""
+
+        body = payload.model_dump(exclude_none=True)
+        extra_body = body.pop("extra_body", None)
+        if isinstance(extra_body, dict):
+            body.update(extra_body)
+        return body

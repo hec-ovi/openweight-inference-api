@@ -13,7 +13,7 @@ def _test_environment(monkeypatch: pytest.MonkeyPatch) -> None:
     """Set deterministic env values for tests."""
 
     monkeypatch.setenv("API_BEARER_KEYS", "test-token")
-    monkeypatch.setenv("MODEL_PROFILE", "qwen3.5-light")
+    monkeypatch.setenv("MODEL_PROFILE", "qwen3-light")
     monkeypatch.setenv("VLLM_BASE_URL", "http://vllm.test")
     monkeypatch.setenv("APP_ENV", "test")
     monkeypatch.setenv("APP_LOG_LEVEL", "WARNING")
