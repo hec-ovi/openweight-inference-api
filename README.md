@@ -1,6 +1,19 @@
-# OpenWeight Responses API
+<h1 align="center">openweight-inference-api</h1>
 
-> ROCm-first vLLM gateway for open-weight inference, built around one rule: one active model, one clean contract, host-backed weights, no image-baked surprises.
+<p align="center">
+  <strong>ROCm-first vLLM gateway for open-weight inference. One active model, one clean contract, host-backed weights, no image-baked surprises.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Working-brightgreen" alt="Status" />
+  <img src="https://img.shields.io/badge/AMD-ROCm-ED1C24?logo=amd&logoColor=white" alt="ROCm" />
+  <img src="https://img.shields.io/badge/vLLM-Stable_lane-4B2E83" alt="vLLM" />
+  <img src="https://img.shields.io/badge/API-OpenAI_Responses-000" alt="OpenAI Responses" />
+  <img src="https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/License-MIT-blue" alt="License" />
+</p>
+
+---
 
 ## 🟢 Why This Repo Exists
 
@@ -266,3 +279,9 @@ Authorization: Bearer your-secret-key
 ```
 
 `HF_TOKEN` is only for downloading model weights from Hugging Face. It is not your inference API key.
+
+---
+
+## License
+
+[MIT](LICENSE).
